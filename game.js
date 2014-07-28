@@ -1,6 +1,6 @@
 var gCanvasElement;
 var gDrawingContext;
-var gNumberofRows = 10;
+var gNumberofRows = 5;
 var gWidthBetweenEachDot = 80;
 var gBoardWidth = gNumberofRows * gWidthBetweenEachDot;
 
@@ -26,11 +26,11 @@ function line(x1, y1, x2, y2) {
    this.y2 = y2;
 
    this.draw = function(ctx) {
-   	ctx.fillStyle = "#BBBBBB";
+   	ctx.strokeStyle = "#777777";
    	ctx.beginPath();
    	ctx.moveTo(this.x1, this.y1);
    	ctx.lineTo(this.x2, this.y2);
-   	ctx.lineWidth = 15;
+   	ctx.lineWidth = 10;
    	ctx.stroke();
    	ctx.closePath();
    }
