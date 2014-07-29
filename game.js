@@ -16,6 +16,14 @@ function dot(x, y) {
    	radius: 10,
    	fill: "#DDDDDD"
    });
+   this.OutputShape.on('mouseover', function() {
+   	this.fill("#AAAAAA");
+   	gLayer.draw();
+   });
+   this.OutputShape.on('mouseout', function() {
+   	this.fill("#DDDDDD");
+   	gLayer.draw();
+   });
    this.draw = function() {
    	gLayer.add(this.OutputShape);
    }
@@ -31,6 +39,14 @@ function line(x1, y1, x2, y2) {
    	stroke: "#AAAAAA",
    	strokeWidth: 5,
    	lineCap: 'round'
+   });
+   this.OutputShape.on('mouseover', function() {
+   	this.stroke("#555555");
+   	gLayer.draw();
+   });
+   this.OutputShape.on('mouseout', function() {
+   	this.stroke("#AAAAAA");
+   	gLayer.draw();
    });
    this.draw = function() {
    	gLayer.add(this.OutputShape);
