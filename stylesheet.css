@@ -1,3 +1,10 @@
 body {
 	
 }
+
+h1 {
+	font-family: times, Times New Roman, times-roman, georgia, serif;
+		font-size: 28px;
+		line-height: 40px;
+		letter-spacing: -1px;color: #444;
+}
