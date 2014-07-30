@@ -1,6 +1,6 @@
 var gStage;
 var gLayer;
-var gPlayerDiv;
+var gPlayerDiv, gCurrentTurnDiv;
 var gNumberofRows = 5;
 var gWidthBetweenEachDot = 80;
 var gBoardWidth = gNumberofRows * gWidthBetweenEachDot;
@@ -9,6 +9,8 @@ var gDots = new Array();
 var gLines = new Array();
 
 var gPlayer1, gPlayer2, currentPlayer;
+
+var gLastTurnWon;
 
 function player(name, color) {
 	this.name = name;
@@ -27,9 +29,27 @@ function DisplayScore()
 					 "<span style='color:" + gPlayer2.color +  "'>" + gPlayer2.name + ": " + gPlayer2.score + "</span><p>";
 	gPlayerDiv.innerHTML = infoString;
 }
+
+function CurrentPlayerDisplay()
+{
+	gCurrentTurnDiv.innerHTML = "<span style='color:" + currentPlayer.color +  "'>It's " + currentPlayer.name + "\'s turn.</span><p>";
+}
+
 function changePlayer()
 {
 	currentPlayer = (currentPlayer == gPlayer1) ? gPlayer2 : gPlayer1;
+}
+
+function gameEnded()
+{
+	for (i = 0; i < gLines.length; i++)
+	{
+		if (gLines[i].capturedLine == false)
+		{
+			return false;
+		}
+	}
+	return true;
 }
 
 function checkForCompleteSquares(newSelectedLine)
@@ -128,6 +148,14 @@ function checkForCompleteSquares(newSelectedLine)
 function createSquares(indexOfSelectedLine) 
 {
 	var SquaresCenters = checkForCompleteSquares(indexOfSelectedLine);
+	if (SquaresCenters.length > 0)
+	{
+		gLastTurnWon = true;
+	}
+	else
+	{
+		gLastTurnWon = false;
+	}
 	for (i = 0; i < SquaresCenters.length; i++)
 	{
 		var rect = new Kinetic.Rect({
@@ -215,7 +243,17 @@ function line(x1, y1, x2, y2) {
 	   	LineVar.color = currentPlayer.color;
 	   	var index = gLines.indexOf(LineVar);
 	   	createSquares(index);
-	   	changePlayer();
+	   	//only change players if the last player didn't get a point
+	   	if (!gLastTurnWon)
+	   	{
+	   		changePlayer();
+	   		CurrentPlayerDisplay();
+	   	}
+	   	if (gameEnded())
+	   	{
+	   		var winner = (gPlayer1.score > gPlayer2.score) ? gPlayer1.name : gPlayer2.name;
+	   		alert("Congrats " + winner + " on winning!");
+	   	}
    	}
    });
    this.draw = function() {
@@ -252,6 +290,7 @@ function newgame() {
 	currentPlayer = gPlayer1;
 
 	DisplayScore();
+	CurrentPlayerDisplay();
 }
 
 
@@ -259,6 +298,7 @@ function initgame(canvasID) {
 	gStage = new Kinetic.Stage({container: 'container', width: gBoardWidth, height: gBoardWidth});
 	gLayer = new Kinetic.Layer();
 	gPlayerDiv = document.getElementById("PlayerInfo");
+	gCurrentTurnDiv = document.getElementById("CurrentTurn");
 	newgame();
 	gStage.add(gLayer);
 }
