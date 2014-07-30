@@ -1,5 +1,6 @@
 var gStage;
 var gLayer;
+var gPlayerDiv;
 var gNumberofRows = 5;
 var gWidthBetweenEachDot = 80;
 var gBoardWidth = gNumberofRows * gWidthBetweenEachDot;
@@ -7,9 +8,28 @@ var gBoardWidth = gNumberofRows * gWidthBetweenEachDot;
 var gDots = new Array();
 var gLines = new Array();
 
+var gPlayer1, gPlayer2, currentPlayer;
+
+function player(name, color) {
+	this.name = name;
+	this.color = color;
+	this.score = 0;
+}
+
 function point(x,y) {
 	this.x = x;
 	this.y = y;
+}
+
+function DisplayScore()
+{
+	var infoString = gPlayer1.name + ": " + gPlayer1.score + "<p>" + 
+					 gPlayer2.name + ": " + gPlayer2.score + "<p>";
+	gPlayerDiv.innerHTML = infoString;
+}
+function changePlayer()
+{
+	currentPlayer = (currentPlayer == gPlayer1) ? gPlayer2 : gPlayer1;
 }
 
 function checkForCompleteSquares(newSelectedLine)
@@ -108,7 +128,6 @@ function checkForCompleteSquares(newSelectedLine)
 function createSquares(indexOfSelectedLine) 
 {
 	var SquaresCenters = checkForCompleteSquares(indexOfSelectedLine);
-	console.log(SquaresCenters);
 	for (i = 0; i < SquaresCenters.length; i++)
 	{
 		var rect = new Kinetic.Rect({
@@ -116,11 +135,15 @@ function createSquares(indexOfSelectedLine)
 			y: SquaresCenters[i].y,
 			width: gWidthBetweenEachDot,
 			height: gWidthBetweenEachDot,
-			fill: 'red',
+			fill: currentPlayer.color,
 		});
 		gLayer.add(rect);
 		rect.moveToBottom();
 		gLayer.draw();
+
+		//also increment score
+		currentPlayer.score++;
+		DisplayScore();
 	}
 }
 
@@ -161,7 +184,7 @@ function line(x1, y1, x2, y2) {
    });
    //Hover effect
    this.OutputShape.on('mouseover', function() {
-   	this.stroke("#555555");
+   	this.stroke(currentPlayer.color);
    	gLayer.draw();
    });
    this.OutputShape.on('mouseout', function() {
@@ -172,9 +195,13 @@ function line(x1, y1, x2, y2) {
    var LineVar = this;
    //Click event
    this.OutputShape.on('click', function() {
-   	LineVar.capturedLine = true;
-   	var index = gLines.indexOf(LineVar);
-   	createSquares(index);
+   	if (!LineVar.capturedLine)
+   	{
+	   	LineVar.capturedLine = true;
+	   	var index = gLines.indexOf(LineVar);
+	   	createSquares(index);
+	   	changePlayer();
+   	}
    });
    this.draw = function() {
    	gLayer.add(this.OutputShape);
@@ -204,12 +231,19 @@ function newgame() {
 			gDots[gDots.length - 1].draw();
 		}
 	}
+
+	gPlayer1 = new player("Player 1", 'red');
+	gPlayer2 = new player("Player 2", 'blue');
+	currentPlayer = gPlayer1;
+
+	DisplayScore();
 }
 
 
 function initgame(canvasID) {
 	gStage = new Kinetic.Stage({container: 'container', width: gBoardWidth, height: gBoardWidth});
 	gLayer = new Kinetic.Layer();
+	gPlayerDiv = document.getElementById("PlayerInfo");
 	newgame();
 	gStage.add(gLayer);
 }
