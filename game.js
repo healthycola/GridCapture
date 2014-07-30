@@ -23,8 +23,8 @@ function point(x,y) {
 
 function DisplayScore()
 {
-	var infoString = gPlayer1.name + ": " + gPlayer1.score + "<p>" + 
-					 gPlayer2.name + ": " + gPlayer2.score + "<p>";
+	var infoString = "<span style='color:" + gPlayer1.color +  "'>" + gPlayer1.name + ": " + gPlayer1.score + "</span><p>" + 
+					 "<span style='color:" + gPlayer2.color +  "'>" + gPlayer2.name + ": " + gPlayer2.score + "</span><p>";
 	gPlayerDiv.innerHTML = infoString;
 }
 function changePlayer()
@@ -135,9 +135,22 @@ function createSquares(indexOfSelectedLine)
 			y: SquaresCenters[i].y,
 			width: gWidthBetweenEachDot,
 			height: gWidthBetweenEachDot,
-			fill: currentPlayer.color,
+			fill: "#BBBBBB",
 		});
+
+		var simpleText = new Kinetic.Text({
+            x: rect.getX(),
+            y: rect.getY() + gWidthBetweenEachDot/2 - 32,
+            text: currentPlayer.name.charAt(0),
+            fontSize: 60,
+            fontFamily: 'Calibri',
+            width:rect.getWidth() ,
+            align: 'center',    
+            fill: 'white'
+        });
+        gLayer.add(simpleText);
 		gLayer.add(rect);
+		simpleText.moveToBottom();
 		rect.moveToBottom();
 		gLayer.draw();
 
@@ -176,28 +189,30 @@ function line(x1, y1, x2, y2) {
    this.x2 = x2;
    this.y2 = y2;
    this.capturedLine = false;
+   this.color = "#AAAAAA";
    this.OutputShape = new Kinetic.Line({
    	points: [this.x1, this.y1, this.x2, this.y2],
-   	stroke: "#AAAAAA",
+   	stroke: this.color,
    	strokeWidth: 5,
    	lineCap: 'round',
    });
+
+   var LineVar = this;
    //Hover effect
    this.OutputShape.on('mouseover', function() {
    	this.stroke(currentPlayer.color);
    	gLayer.draw();
    });
    this.OutputShape.on('mouseout', function() {
-   	this.stroke("#AAAAAA");
+   	this.stroke(LineVar.color);
    	gLayer.draw();
    });
-
-   var LineVar = this;
    //Click event
    this.OutputShape.on('click', function() {
    	if (!LineVar.capturedLine)
    	{
 	   	LineVar.capturedLine = true;
+	   	LineVar.color = currentPlayer.color;
 	   	var index = gLines.indexOf(LineVar);
 	   	createSquares(index);
 	   	changePlayer();
@@ -232,8 +247,8 @@ function newgame() {
 		}
 	}
 
-	gPlayer1 = new player("Player 1", 'red');
-	gPlayer2 = new player("Player 2", 'blue');
+	gPlayer1 = new player("Albus", '#993300');
+	gPlayer2 = new player("Harry", '#003366');
 	currentPlayer = gPlayer1;
 
 	DisplayScore();
