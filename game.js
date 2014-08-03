@@ -1,7 +1,7 @@
 var gStage;
 var gLayer;
 var gPlayerDiv, gCurrentTurnDiv;
-var gNumberofRows = 5;
+var gNumberofRows = 10;
 var gWidthBetweenEachDot = 80;
 var gBoardWidth = gNumberofRows * gWidthBetweenEachDot;
 
