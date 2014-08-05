@@ -128,6 +128,7 @@ function checkForCompleteSquares(newSelectedLine)
 function createSquares(indexOfSelectedLine) 
 {
 	var SquaresCenters = checkForCompleteSquares(indexOfSelectedLine);
+	var wonAsquare = false;
 	for (i = 0; i < SquaresCenters.length; i++)
 	{
 		var rect = new Kinetic.Rect({
@@ -157,7 +158,9 @@ function createSquares(indexOfSelectedLine)
 		//also increment score
 		currentPlayer.score++;
 		DisplayScore();
+		wonAsquare = true;
 	}
+	return wonAsquare;
 }
 
 function dot(x, y) {
@@ -214,8 +217,10 @@ function line(x1, y1, x2, y2) {
 	   	LineVar.capturedLine = true;
 	   	LineVar.color = currentPlayer.color;
 	   	var index = gLines.indexOf(LineVar);
-	   	createSquares(index);
-	   	changePlayer();
+	   	if (!createSquares(index))
+	   	{
+	   		changePlayer();
+	   	}
    	}
    });
    this.draw = function() {
