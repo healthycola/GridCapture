@@ -135,7 +135,7 @@ function createSquares(indexOfSelectedLine)
 			y: SquaresCenters[i].y,
 			width: gWidthBetweenEachDot,
 			height: gWidthBetweenEachDot,
-			fill: "#BBBBBB",
+			fill: currentPlayer.color,
 		});
 
 		var simpleText = new Kinetic.Text({
