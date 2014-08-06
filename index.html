@@ -2,15 +2,68 @@
 	<head>
 		<title>Grid Capture</title>
 		<link rel="stylesheet" type="text/css" href="stylesheet.css" />
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+
 		<script type="text/javascript" src="Kinetic.js"></script>
 		<script type="text/javascript" src="game.js"></script>
+		<script src="jquery.js"></script>
+		<script src="jquery-ui.js"></script>
+		<script>
+		function exchange(id){
+			var ie=document.all&&!window.opera? document.all : 0
+			var frmObj=ie? ie[id] : document.getElementById(id)
+			var toObj=ie? ie[id+'b'] : document.getElementById(id+'b')
+			toObj.style.width=frmObj.offsetWidth+7+'px'
+			frmObj.style.display='none';
+			toObj.style.display='inline';
+			toObj.value=frmObj.innerHTML
+			toObj.focus();
+			toObj.select();
+		}
+  		</script>
 	</head>
 	<body>
 		<h1>Grid Capture!</h1>
 		<div id="PlayerInfo"></div>
 		<div id="container"></div>
+		<a href="#" id="dialog-link" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-newwin"></span>Settings</a>
+		<div id="dialog" title="Settings">
+		<p><span id="itm1" onclick="exchange(this.id)">Player 1 Name</span><input id="itm1b" class="replace" type="text" value="" style="display:none"><p>
+		<span id="itm2" onclick="exchange(this.id)">Player 2 Name</span><input id="itm2b" class="replace" type="text" value="" style="display:none">
+
+
+
+		</p>
+		</div>
+
+
+
 		<script>
 			initgame('gameCanvas');
+			$( "#dialog" ).dialog({
+				autoOpen: false,
+				width: 400,
+				buttons: [
+					{
+						text: "Ok",
+						click: function() {
+							$( this ).dialog( "close" );
+						}
+					},
+					{
+						text: "Cancel",
+						click: function() {
+							$( this ).dialog( "close" );
+						}
+					}
+				]
+			});
+			  // Link to open the dialog
+			$( "#dialog-link" ).click(function( event ) {
+				$( "#dialog" ).dialog( "open" );
+				event.preventDefault();
+			});
 		</script>
+
 	</body>
 </html>

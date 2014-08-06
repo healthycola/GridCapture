@@ -8,3 +8,22 @@ h1 {
 		line-height: 40px;
 		letter-spacing: -1px;color: #444;
 }
+
+#dialog {
+	border: 1px solid #000;
+	border-radius: 6px;
+  	background-color: #DFDFDF;
+  	padding-left: 10px;
+}
+
+.ui-dialog-titlebar
+{
+	padding-left: 10px;
+}
+
+.ui-dialog .ui-dialog-titlebar-close {
+float: right;
+width: 20px;
+margin: -5px 0 0 0;
+padding: 1px;
+height: 20px;
