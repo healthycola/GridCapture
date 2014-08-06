@@ -267,3 +267,7 @@ function initgame(canvasID) {
 	newgame();
 	gStage.add(gLayer);
 }
+
+function saveSettings() {
+	console.log("saved!");
+}

@@ -5915,7 +5915,7 @@ var dialog = $.widget( "ui.dialog", {
 		autoOpen: true,
 		buttons: [],
 		closeOnEscape: true,
-		closeText: "Close",
+		closeText: "x",
 		dialogClass: "",
 		draggable: true,
 		hide: null,

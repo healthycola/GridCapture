@@ -10,15 +10,14 @@ h1 {
 }
 
 #dialog {
-	border: 1px solid #000;
-	border-radius: 6px;
-  	background-color: #DFDFDF;
   	padding-left: 10px;
 }
 
 .ui-dialog-titlebar
 {
 	padding-left: 10px;
+	padding-bottom: 5px;
+	border-bottom: 1px dotted #888;
 }
 
 .ui-dialog .ui-dialog-titlebar-close {
@@ -27,3 +26,16 @@ width: 20px;
 margin: -5px 0 0 0;
 padding: 1px;
 height: 20px;
+}
+
+.ui-dialog-buttonpane {
+	padding-left: 10px;
+}
+
+.ui-dialog {
+	border: 1px solid #000;
+	padding: 10px;
+	border-radius: 6px;
+	overflow: hidden;
+	background-color: #EEE;
+}
