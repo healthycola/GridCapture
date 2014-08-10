@@ -3,6 +3,7 @@ var gLayer;
 var gPlayerDiv;
 var gSettingsDiv;
 var gNumberofRows = 5;
+var gMaxNumberOfPlayers = 3;	//if you change this, change var colors[] also.
 var gNumberofPlayers = 3;
 var gWidthBetweenEachDot = 80;
 var gBoardWidth = gNumberofRows * gWidthBetweenEachDot;
@@ -13,7 +14,7 @@ var gLines = new Array();
 var players = new Array();
 var currentPlayer;
 
-//Should be as long as number of players, at least.
+//Should be as long as max number of players, at least.
 var colors = [ "#854646", "#465085", "#F0CA05" ];
 function player(name, color) {
 	this.name = name;
@@ -29,7 +30,7 @@ function poplateSettings() {
 	var infoString = "";
 	for (i = 0; i < gNumberofPlayers; i++)
 	{
-		infoString = infoString + "<span id=\"player" + i + "name\" onclick=\"exchange(this.id)\">Player " + i + " Name</span><input id=\"player" + i + "nameb\" class=\"replace\" type=\"text\" value=\" \" style=\"display:none\"><br>";
+		infoString = infoString + "<span id=\"player" + i + "name\" onclick=\"exchange(this.id)\">Player " + i + " Name</span><input id=\"player" + i + "nameb\" class=\"replace\" type=\"text\" value= \"Player " + i + " Name\" style=\"display:none\"\><br>";
 	}
 	gSettingsDiv.innerHTML = infoString;
 }
@@ -301,7 +302,7 @@ function initgame(canvasID) {
 	gStage = new Kinetic.Stage({container: 'container', width: gBoardWidth, height: gBoardWidth});
 	gLayer = new Kinetic.Layer();
 	gPlayerDiv = document.getElementById("PlayerInfo");
-	gSettingsDiv = document.getElementById("settingsDialog");
+	gSettingsDiv = document.getElementById("playerNameSettings");
 	newgame();
 	gStage.add(gLayer);
 }

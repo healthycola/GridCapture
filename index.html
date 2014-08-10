@@ -18,6 +18,15 @@
 			toObj.focus();
 			toObj.select();
 		}
+		function exchangeBack(id){
+			var ie=document.all&&!window.opera? document.all : 0
+			var frmObj=ie? ie[id] : document.getElementById(id)
+			var toObj=ie? ie[id.substr(0,id.length - 1)] : document.getElementById(id.substr(0,id.length - 1))
+			frmObj.style.display='none';
+			toObj.style.display='inline';
+			console.log(frmObj.innerHTML);
+			toObj.innerHTML=frmObj.value;
+		}
   		</script>
 	</head>
 	<body>
@@ -26,6 +35,7 @@
 		<div id="container"></div>
 		<a href="#" id="dialog-link" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-newwin"></span>Settings</a>
 		<div id="settingsDialog" title="Settings">
+			<div id="playerNameSettings" title="Settings">
 		</div>
 
 
@@ -39,8 +49,13 @@
 					{
 						text: "Save",
 						click: function() {
-							var playerNames = $('#settingsDialog input').map(function(){return $(this).val();}).get();
+							var playerNames = $('#playerNameSettings input').map(function(){return $(this).val();}).get();
 								saveSettings(playerNames);
+							for (i = 0; i < $('#playerNameSettings input').length; i++)
+							{
+								console.log($('#playerNameSettings input')[i].id);
+								exchangeBack($('#playerNameSettings input')[i].id);
+							}
 							$( this ).dialog( "close" );
 						}
 					},
