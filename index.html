@@ -7,12 +7,16 @@
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <link rel="stylesheet" href="stylesheets/stylesheet.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <script type="text/javascript" src="javascripts/Kinetic.js"></script>
     <script type="text/javascript" src="javascripts/game.js"></script>
+    <script type="text/javascript" src="javascripts/pageScripts.js"></script>
+    <script type="text/javascript" src="javascripts/jquery.js"></script>
+    <script type="text/javascript" src="javascripts/jquery-ui.js"></script>
   </head>
   <body>
     <div class="wrapper">
@@ -43,11 +47,46 @@
 <h3>
 <a name="demo" class="anchor" href="#demo"><span class="octicon octicon-link"></span></a>Demo</h3>
 
-  <div id="PlayerInfo"></div>
-  <div id="container"></div>
+      <div id="PlayerInfo"></div>
+    <div id="container"></div>
+    <a href="#" id="dialog-link" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-newwin"></span>Settings</a>
+    <div id="settingsDialog" title="Settings">
+      <div id="playerNameSettings" title="Settings"></div>
+      <div id="gridSize" title="Settings"></div>
+    </div>
   <script>
-    initgame('gameCanvas');
-  </script>
+      initgame('gameCanvas');
+      $( "#settingsDialog" ).dialog({
+        autoOpen: false,
+        width: 400,
+        buttons: [
+          {
+            text: "Save",
+            click: function() {
+              var playerNames = $('#playerNameSettings input').map(function(){return $(this).val();}).get();
+              var gridSize = $('#gridSize input').map(function(){return $(this).val();}).get();
+                saveSettings(playerNames, gridSize);
+              for (i = 0; i < $('#playerNameSettings input').length; i++)
+              {
+                exchangeBack($('#playerNameSettings input')[i].id);
+              }
+              $( this ).dialog( "close" );
+            }
+          },
+          {
+            text: "Cancel",
+            click: function() {
+              $( this ).dialog( "close" );
+            }
+          }
+        ]
+      });
+        // Link to open the dialog
+      $( "#dialog-link" ).click(function( event ) {
+        $( "#settingsDialog" ).dialog( "open" );
+        event.preventDefault();
+      });
+    </script>
     
 <h3>
 <a name="areas-of-improvement" class="anchor" href="#areas-of-improvement"><span class="octicon octicon-link"></span></a>Areas of improvement</h3>
@@ -55,11 +94,13 @@
 <p>There are a bunch of things that the game needs and that I've planned out for it. I've listed them below.</p>
 
 <ul>
-<li>[ ] Add a settings panel for players to change their names and colours</li>
-<li>[ ] In the settings panel, also include a method to change the grid size</li>
-<li>[ ] Add support for more than 2 players to play at a time</li>
+<li>[*] Add a settings panel for players to change their names and colours</li>
+<li>[*] In the settings panel, also include a method to change the grid size</li>
+<li>[*] Add support for more than 2 players to play at a time</li>
 <li>[ ] Add multi-player server support such that two (or more) players can play at the same time on different computers</li>
 </ul>
+
+Edit (Aug 10th): I'm on vacation right now, and I was able to add some of the functionality mentioned above on my off time. :)
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/healthycola">healthycola</a></p>
