@@ -35,7 +35,8 @@
 		<div id="container"></div>
 		<a href="#" id="dialog-link" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-newwin"></span>Settings</a>
 		<div id="settingsDialog" title="Settings">
-			<div id="playerNameSettings" title="Settings">
+			<div id="playerNameSettings" title="Settings"></div>
+			<div id="gridSize" title="Settings"></div>
 		</div>
 
 
@@ -50,10 +51,10 @@
 						text: "Save",
 						click: function() {
 							var playerNames = $('#playerNameSettings input').map(function(){return $(this).val();}).get();
-								saveSettings(playerNames);
+							var gridSize = $('#gridSize input').map(function(){return $(this).val();}).get();
+								saveSettings(playerNames, gridSize);
 							for (i = 0; i < $('#playerNameSettings input').length; i++)
 							{
-								console.log($('#playerNameSettings input')[i].id);
 								exchangeBack($('#playerNameSettings input')[i].id);
 							}
 							$( this ).dialog( "close" );

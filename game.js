@@ -1,7 +1,8 @@
 var gStage;
 var gLayer;
 var gPlayerDiv;
-var gSettingsDiv;
+var gPlayerNamesDiv;
+var gGridSizeDiv;
 var gNumberofRows = 5;
 var gMaxNumberOfPlayers = 3;	//if you change this, change var colors[] also.
 var gNumberofPlayers = 3;
@@ -32,7 +33,8 @@ function poplateSettings() {
 	{
 		infoString = infoString + "<span id=\"player" + i + "name\" onclick=\"exchange(this.id)\">Player " + i + " Name</span><input id=\"player" + i + "nameb\" class=\"replace\" type=\"text\" value= \"Player " + i + " Name\" style=\"display:none\"\><br>";
 	}
-	gSettingsDiv.innerHTML = infoString;
+	gPlayerNamesDiv.innerHTML = infoString;
+	gGridSizeDiv.innerHTML = "<span id=\"gridSz\" onclick=\"exchange(this.id)\">" + gNumberofRows + "</span><input id=\"gridSzb\" class=\"replace\" type=\"text\" value= \"" + gNumberofRows + "\" style=\"display:none\"\><br>";
 }
 function point(x,y) {
 	this.x = x;
@@ -258,6 +260,51 @@ function line(x1, y1, x2, y2) {
 };
 
 function newgame() {
+	initGrid();
+	for (i = 0; i < gNumberofPlayers; i++)
+	{
+		players[i] = new player(i.toString(), colors[i]);
+	}
+	currentPlayer = players[0];
+	poplateSettings();
+	DisplayScore();
+}
+
+function resetBoard() {
+	//Reset all lines to blank
+	for (i = 0; i < gLines.length; i++)
+	{
+		gLines[i].reset();
+	}
+	gLayer.draw();
+	DisplayScore();
+}
+
+function initKinetic() {
+	gStage = new Kinetic.Stage({container: 'container', width: gBoardWidth, height: gBoardWidth});
+	gLayer = new Kinetic.Layer();
+}
+
+function initgame(canvasID) {
+	initKinetic();
+	gPlayerDiv = document.getElementById("PlayerInfo");
+	gPlayerNamesDiv = document.getElementById("playerNameSettings");
+	gGridSizeDiv = document.getElementById("gridSize");
+
+	newgame();
+	gStage.add(gLayer);
+}
+
+function reInitGame() {
+	gLayer = new Kinetic.Layer();
+	gStage.add(gLayer);
+	initGrid();
+	currentPlayer = players[0];
+	DisplayScore();
+	console.log(gLines);
+}
+
+function initGrid() {
 	var prevX = prevY = gWidthBetweenEachDot/2;
 	for (h = prevY; h < gBoardWidth; h += gWidthBetweenEachDot)
 	{
@@ -279,39 +326,37 @@ function newgame() {
 			gDots[gDots.length - 1].draw();
 		}
 	}
-
-	for (i = 0; i < gNumberofPlayers; i++)
+}
+function destroygrid() {
+	//Delete all lines
+	while (gLines.length > 0)
 	{
-		players[i] = new player(i.toString(), colors[i]);
+		gLines.pop();
 	}
-	currentPlayer = players[0];
-	poplateSettings();
-	DisplayScore();
-}
 
-function resetGame() {
-	for (i = 0; i < gLines.length; i++)
+	//Delete all dots
+	while (gDots.length > 0)
 	{
-		gLines[i].reset();
+		gDots.pop();
 	}
-	gLayer.draw();
-	DisplayScore();
+	gLayer.destroy();
+	gStage.destroy();
 }
 
-function initgame(canvasID) {
-	gStage = new Kinetic.Stage({container: 'container', width: gBoardWidth, height: gBoardWidth});
-	gLayer = new Kinetic.Layer();
-	gPlayerDiv = document.getElementById("PlayerInfo");
-	gSettingsDiv = document.getElementById("playerNameSettings");
-	newgame();
-	gStage.add(gLayer);
-}
-
-function saveSettings(playerNames) {
+function saveSettings(playerNames, gridSize) {
 	for (i = 0; i < gNumberofPlayers; i++)
 	{
 		players[i].name = playerNames[i];
 		players[i].reset();
 	}
-	resetGame();
+	if (gridSize != gNumberofRows)
+	{
+		gNumberofRows = gridSize;
+		gBoardWidth = gNumberofRows * gWidthBetweenEachDot;
+		destroygrid();
+		initKinetic();
+		reInitGame();
+	}
+
+	resetBoard();
 }
