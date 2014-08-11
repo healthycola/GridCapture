@@ -39,3 +39,12 @@ height: 20px;
 	overflow: hidden;
 	background-color: #EEE;
 }
+
+#settingsDialog span {
+	border-bottom: 1px dotted #000;
+}
+
+#settingsDialog {
+	line-height: 25px;
+	padding-left: 10px;
+}

@@ -1,8 +1,9 @@
 var gStage;
 var gLayer;
-var gPlayerDiv;
+var gPlayerScoresDiv;
 var gPlayerNamesDiv;
 var gGridSizeDiv;
+var gNumberofPlayersDiv;
 var gNumberofRows = 5;
 var gMaxNumberOfPlayers = 3;	//if you change this, change var colors[] also.
 var gNumberofPlayers = 3;
@@ -17,6 +18,7 @@ var currentPlayer;
 
 //Should be as long as max number of players, at least.
 var colors = [ "#854646", "#465085", "#F0CA05" ];
+
 function player(name, color) {
 	this.name = name;
 	this.color = color;
@@ -27,14 +29,15 @@ function player(name, color) {
 	}
 }
 
-function poplateSettings() {
+function populateSettings() {
 	var infoString = "";
 	for (i = 0; i < gNumberofPlayers; i++)
 	{
-		infoString = infoString + "<span id=\"player" + i + "name\" onclick=\"exchange(this.id)\">Player " + i + " Name</span><input id=\"player" + i + "nameb\" class=\"replace\" type=\"text\" value= \"Player " + i + " Name\" style=\"display:none\"\><br>";
+		infoString = infoString + "<span id=\"player" + i + "name\" onclick=\"exchange(this.id)\">" + players[i].name + "</span><input id=\"player" + i + "nameb\" class=\"replace\" type=\"text\" value= \"" + players[i].name + "\" style=\"display:none\"\><br>";
 	}
 	gPlayerNamesDiv.innerHTML = infoString;
 	gGridSizeDiv.innerHTML = "<span id=\"gridSz\" onclick=\"exchange(this.id)\">" + gNumberofRows + "</span><input id=\"gridSzb\" class=\"replace\" type=\"text\" value= \"" + gNumberofRows + "\" style=\"display:none\"\><br>";
+	gNumberofPlayersDiv.innerHTML = "<span id=\"NumofPlayers\" onclick=\"exchange(this.id)\">" + gNumberofPlayers + "</span><input id=\"NumofPlayersb\" class=\"replace\" type=\"text\" value= \"" + gNumberofPlayers + "\" style=\"display:none\"\><br>";
 }
 function point(x,y) {
 	this.x = x;
@@ -48,7 +51,7 @@ function DisplayScore()
 	{
 		infoString = infoString + "<span style='color:" + players[i].color +  "'>" + players[i].name + ": " + players[i].score + "</span><p>";
 	}
-	gPlayerDiv.innerHTML = infoString;
+	gPlayerScoresDiv.innerHTML = infoString;
 }
 
 function changePlayer()
@@ -261,13 +264,24 @@ function line(x1, y1, x2, y2) {
 
 function newgame() {
 	initGrid();
-	for (i = 0; i < gNumberofPlayers; i++)
-	{
-		players[i] = new player(i.toString(), colors[i]);
-	}
+	initPlayers();
 	currentPlayer = players[0];
-	poplateSettings();
+	populateSettings();
 	DisplayScore();
+}
+
+function initPlayers() {
+	while (players.length < gNumberofPlayers)
+	{
+		players.push(new player((players.length).toString(), colors[players.length]));
+	}
+}
+
+function popPlayers() {
+	while (players.length > gNumberofPlayers)
+	{
+		players.pop();
+	}
 }
 
 function resetBoard() {
@@ -287,10 +301,10 @@ function initKinetic() {
 
 function initgame(canvasID) {
 	initKinetic();
-	gPlayerDiv = document.getElementById("PlayerInfo");
+	gPlayerScoresDiv = document.getElementById("PlayerInfo");
 	gPlayerNamesDiv = document.getElementById("playerNameSettings");
 	gGridSizeDiv = document.getElementById("gridSize");
-
+	gNumberofPlayersDiv = document.getElementById("NumberofPlayers");
 	newgame();
 	gStage.add(gLayer);
 }
@@ -343,11 +357,33 @@ function destroygrid() {
 	gStage.destroy();
 }
 
-function saveSettings(playerNames, gridSize) {
-	for (i = 0; i < gNumberofPlayers; i++)
+function saveSettings(playerNames, gridSize, NewNumberOfPlayers) {
+	//Add or decrease number of players
+	if (NewNumberOfPlayers != gNumberofPlayers)
 	{
-		players[i].name = playerNames[i];
-		players[i].reset();
+		console.log(NewNumberOfPlayers + " " + gNumberofPlayers);
+		if (!isNaN(Number(NewNumberOfPlayers)) && Number(NewNumberOfPlayers) < gMaxNumberOfPlayers)
+		{
+			if (NewNumberOfPlayers < gNumberofPlayers)
+			{
+				gNumberofPlayers = Number(NewNumberOfPlayers);
+				popPlayers();
+			}
+			else
+			{
+				gNumberofPlayers = Number(NewNumberOfPlayers);
+				initPlayers();
+			}
+			populateSettings();
+		}
+	}
+	else {
+		for (i = 0; i < gNumberofPlayers; i++)
+		{
+			players[i].name = playerNames[i];
+			console.log(players[i].name);
+			players[i].reset();
+		}
 	}
 	if (gridSize != gNumberofRows)
 	{
@@ -357,6 +393,5 @@ function saveSettings(playerNames, gridSize) {
 		initKinetic();
 		reInitGame();
 	}
-
 	resetBoard();
 }
