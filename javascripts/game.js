@@ -64,16 +64,13 @@ function checkForCompleteSquares(newSelectedLine)
 {
 	//If the line is horizontal, then check up and down 
 	var output = new Array();
-	console.log(newSelectedLine);
 	if (newSelectedLine % 2 == 0)
 	{
 		var Rowh = Math.floor(newSelectedLine/(2*(gNumberofRows - 1)));
 		var Colh = (newSelectedLine % (2*(gNumberofRows - 1))) / 2;
 		//If the line is at the top row, then we only have to check the box underneath
-		console.log(Rowh);
 		if (Rowh < gNumberofRows - 1)
 		{
-			console.log(Rowh);
 			//Check the row below
 			var Rowv = Rowh;
 			var ColvLeft = Colh;
@@ -159,7 +156,6 @@ function checkForCompleteSquares(newSelectedLine)
 function createSquares(indexOfSelectedLine) 
 {
 	var SquaresCenters = checkForCompleteSquares(indexOfSelectedLine);
-	console.log(SquaresCenters);
 	var wonAsquare = false;
 	for (i = 0; i < SquaresCenters.length; i++)
 	{
@@ -319,7 +315,6 @@ function reInitGame() {
 	initGrid();
 	currentPlayer = players[0];
 	DisplayScore();
-	console.log(gLines);
 }
 
 function initGrid() {
@@ -365,7 +360,6 @@ function saveSettings(playerNames, gridSize, NewNumberOfPlayers) {
 	//Add or decrease number of players
 	if (NewNumberOfPlayers != gNumberofPlayers)
 	{
-		console.log(NewNumberOfPlayers + " " + gNumberofPlayers);
 		if (!isNaN(Number(NewNumberOfPlayers)) && Number(NewNumberOfPlayers) < gMaxNumberOfPlayers)
 		{
 			if (NewNumberOfPlayers < gNumberofPlayers)
@@ -385,7 +379,6 @@ function saveSettings(playerNames, gridSize, NewNumberOfPlayers) {
 		for (i = 0; i < gNumberofPlayers; i++)
 		{
 			players[i].name = playerNames[i];
-			console.log(players[i].name);
 			players[i].reset();
 		}
 	}
