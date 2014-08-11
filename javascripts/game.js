@@ -273,7 +273,7 @@ function newgame() {
 function initPlayers() {
 	while (players.length < gNumberofPlayers)
 	{
-		players.push(new player((players.length).toString(), colors[players.length]));
+		players.push(new player('Player ' + (players.length).toString(), colors[players.length]));
 	}
 }
 
