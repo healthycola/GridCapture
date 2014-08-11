@@ -49,7 +49,7 @@ function DisplayScore()
 	var infoString = "";
 	for (i = 0; i < players.length; i++)
 	{
-		infoString = infoString + "<span style='color:" + players[i].color +  "'>" + players[i].name + ": " + players[i].score + "</span><p>";
+		infoString = infoString + "<span style='color:" + players[i].color +  "'>" + players[i].name + ": " + players[i].score + "</span><br>";
 	}
 	gPlayerScoresDiv.innerHTML = infoString;
 }
