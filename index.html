@@ -15,7 +15,8 @@
 		<a href="#" id="dialog-link" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-newwin"></span>Settings</a>
 		<div id="settingsDialog" title="Settings">
 			<div id="playerNameSettings" title="Settings"></div>
-			<div id="gridSize" title="Settings"></div>
+			Grid Size: <span id="gridSize" title="Change the grid size"></span>
+			Number of Players: <span id="NumberofPlayers" title="All settings will get reset if you change this."></span>
 		</div>
 
 
@@ -31,7 +32,9 @@
 						click: function() {
 							var playerNames = $('#playerNameSettings input').map(function(){return $(this).val();}).get();
 							var gridSize = $('#gridSize input').map(function(){return $(this).val();}).get();
-								saveSettings(playerNames, gridSize);
+							var NumofPlayers = $('#NumberofPlayers input').map(function(){return $(this).val();}).get();
+
+								saveSettings(playerNames, gridSize, NumofPlayers);
 							for (i = 0; i < $('#playerNameSettings input').length; i++)
 							{
 								exchangeBack($('#playerNameSettings input')[i].id);
