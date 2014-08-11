@@ -357,6 +357,15 @@ function destroygrid() {
 }
 
 function saveSettings(playerNames, gridSize, NewNumberOfPlayers) {
+	if (gridSize != gNumberofRows)
+	{
+		gNumberofRows = gridSize;
+		gBoardWidth = gNumberofRows * gWidthBetweenEachDot;
+		destroygrid();
+		initKinetic();
+		reInitGame();
+	}
+
 	//Add or decrease number of players
 	if (NewNumberOfPlayers != gNumberofPlayers)
 	{
@@ -382,13 +391,7 @@ function saveSettings(playerNames, gridSize, NewNumberOfPlayers) {
 			players[i].reset();
 		}
 	}
-	if (gridSize != gNumberofRows)
-	{
-		gNumberofRows = gridSize;
-		gBoardWidth = gNumberofRows * gWidthBetweenEachDot;
-		destroygrid();
-		initKinetic();
-		reInitGame();
-	}
+
+
 	resetBoard();
 }
