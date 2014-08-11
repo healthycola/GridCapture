@@ -18,3 +18,16 @@ function exchange(id){
 			console.log(frmObj.innerHTML);
 			toObj.innerHTML=frmObj.value;
 		}
+
+function saveSettingsClick() {
+							var playerNames = $('#playerNameSettings input').map(function(){return $(this).val();}).get();
+							var gridSize = $('#gridSize input').map(function(){return $(this).val();}).get();
+							var NumofPlayers = $('#NumberofPlayers input').map(function(){return $(this).val();}).get();
+
+								saveSettings(playerNames, gridSize, NumofPlayers);
+							for (i = 0; i < $('#playerNameSettings input').length; i++)
+							{
+								exchangeBack($('#playerNameSettings input')[i].id);
+							}
+							$( this ).dialog( "close" );
+						}
