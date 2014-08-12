@@ -1,3 +1,6 @@
+/*global Kinetic */
+
+"use strict";
 var gStage;
 var gLayer;
 var gPlayerScoresDiv;
@@ -10,44 +13,46 @@ var gNumberofPlayers = 3;
 var gWidthBetweenEachDot = 80;
 var gBoardWidth = gNumberofRows * gWidthBetweenEachDot;
 
-var gDots = new Array();
-var gLines = new Array();
+var gDots = [];
+var gLines = [];
 
-var players = new Array();
+var players = [];
 var currentPlayer;
 
 //Should be as long as max number of players, at least.
 var colors = [ "#854646", "#465085", "#F0CA05" ];
 
 function player(name, color) {
+	/*jshint validthis: true */
 	this.name = name;
 	this.color = color;
 	this.score = 0;
 
 	this.reset = function () {
 		this.score = 0;
-	}
+	};
 }
 
 function populateSettings() {
 	var infoString = "";
-	for (i = 0; i < gNumberofPlayers; i++)
+	for (var i = 0; i < gNumberofPlayers; i++)
 	{
-		infoString = infoString + "<span id=\"player" + i + "name\" onclick=\"exchange(this.id)\">" + players[i].name + "</span><input id=\"player" + i + "nameb\" class=\"replace\" type=\"text\" value= \"" + players[i].name + "\" style=\"display:none\"\><br>";
+		infoString = infoString + "<span id=\"player" + i + "name\" onclick=\"exchange(this.id)\">" + players[i].name + "</span><input id=\"player" + i + "nameb\" class=\"replace\" type=\"text\" value= \"" + players[i].name + "\" style=\"display:none\"/><br>";
 	}
 	gPlayerNamesDiv.innerHTML = infoString;
-	gGridSizeDiv.innerHTML = "<span id=\"gridSz\" onclick=\"exchange(this.id)\">" + gNumberofRows + "</span><input id=\"gridSzb\" class=\"replace\" type=\"text\" value= \"" + gNumberofRows + "\" style=\"display:none\"\><br>";
-	gNumberofPlayersDiv.innerHTML = "<span id=\"NumofPlayers\" onclick=\"exchange(this.id)\">" + gNumberofPlayers + "</span><input id=\"NumofPlayersb\" class=\"replace\" type=\"text\" value= \"" + gNumberofPlayers + "\" style=\"display:none\"\><br>";
+	gGridSizeDiv.innerHTML = "<span id=\"gridSz\" onclick=\"exchange(this.id)\">" + gNumberofRows + "</span><input id=\"gridSzb\" class=\"replace\" type=\"text\" value= \"" + gNumberofRows + "\" style=\"display:none\"/><br>";
+	gNumberofPlayersDiv.innerHTML = "<span id=\"NumofPlayers\" onclick=\"exchange(this.id)\">" + gNumberofPlayers + "</span><input id=\"NumofPlayersb\" class=\"replace\" type=\"text\" value= \"" + gNumberofPlayers + "\" style=\"display:none\"/><br>";
 }
 function point(x,y) {
+	/*jshint validthis: true */
 	this.x = x;
 	this.y = y;
 }
 
-function DisplayScore()
+function displayScore()
 {
 	var infoString = "";
-	for (i = 0; i < players.length; i++)
+	for (var i = 0; i < players.length; i++)
 	{
 		infoString = infoString + "<span style='color:" + players[i].color +  "'>" + players[i].name + ": " + players[i].score + "</span><br>";
 	}
@@ -63,22 +68,23 @@ function changePlayer()
 function checkForCompleteSquares(newSelectedLine)
 {
 	//If the line is horizontal, then check up and down 
-	var output = new Array();
-	if (newSelectedLine % 2 == 0)
+	var output = [];
+	var Rowv, Rowh, Colv, Colh, RowhBottom, RowhTop, ColvLeft, ColvRight, ColhRight, IndexRightVertical, IndexLeftVertical, IndexBottomHorizontal, IndexTopHorizontal, IndexUpHorizontal;
+	if (newSelectedLine % 2 === 0)
 	{
-		var Rowh = Math.floor(newSelectedLine/(2*(gNumberofRows - 1)));
-		var Colh = (newSelectedLine % (2*(gNumberofRows - 1))) / 2;
+		Rowh = Math.floor(newSelectedLine/(2*(gNumberofRows - 1)));
+		Colh = (newSelectedLine % (2*(gNumberofRows - 1))) / 2;
 		//If the line is at the top row, then we only have to check the box underneath
 		if (Rowh < gNumberofRows - 1)
 		{
 			//Check the row below
-			var Rowv = Rowh;
-			var ColvLeft = Colh;
-			var ColvRight = Colh + 1;
+			Rowv = Rowh;
+			ColvLeft = Colh;
+			ColvRight = Colh + 1;
 
-			var IndexLeftVertical = (Rowv*2 + 1) + (2*(gNumberofRows - 1)) * ColvLeft;
-			var IndexRightVertical = (Rowv*2 + 1) + (2*(gNumberofRows - 1)) * ColvRight;
-			var IndexBottomHorizontal = newSelectedLine + (2*(gNumberofRows - 1));
+			IndexLeftVertical = (Rowv*2 + 1) + (2*(gNumberofRows - 1)) * ColvLeft;
+			IndexRightVertical = (Rowv*2 + 1) + (2*(gNumberofRows - 1)) * ColvRight;
+			IndexBottomHorizontal = newSelectedLine + (2*(gNumberofRows - 1));
 			if (gLines[IndexLeftVertical].capturedLine && 
 				gLines[IndexRightVertical].capturedLine && 
 				gLines[IndexBottomHorizontal].capturedLine)
@@ -91,13 +97,13 @@ function checkForCompleteSquares(newSelectedLine)
 		if (Rowh > 0)
 		{
 			//Check the row above
-			var Rowv = Rowh - 1;
-			var ColvLeft = Colh;
-			var ColvRight = Colh + 1;
+			Rowv = Rowh - 1;
+			ColvLeft = Colh;
+			ColvRight = Colh + 1;
 
-			var IndexLeftVertical = (Rowv*2 + 1) + (2*(gNumberofRows - 1)) * ColvLeft;
-			var IndexRightVertical = (Rowv*2 + 1) + (2*(gNumberofRows - 1)) * ColvRight;
-			var IndexUpHorizontal = newSelectedLine - (2*(gNumberofRows - 1));
+			IndexLeftVertical = (Rowv*2 + 1) + (2*(gNumberofRows - 1)) * ColvLeft;
+			IndexRightVertical = (Rowv*2 + 1) + (2*(gNumberofRows - 1)) * ColvRight;
+			IndexUpHorizontal = newSelectedLine - (2*(gNumberofRows - 1));
 			if (gLines[IndexLeftVertical].capturedLine && 
 				gLines[IndexRightVertical].capturedLine && 
 				gLines[IndexUpHorizontal].capturedLine)
@@ -109,19 +115,19 @@ function checkForCompleteSquares(newSelectedLine)
 	}
 	else
 	{
-		var Rowv = Math.floor(((newSelectedLine) % (2*(gNumberofRows - 1))) / 2);
-		var Colv = Math.floor((newSelectedLine) / (2 * (gNumberofRows - 1)));
+		Rowv = Math.floor(((newSelectedLine) % (2*(gNumberofRows - 1))) / 2);
+		Colv = Math.floor((newSelectedLine) / (2 * (gNumberofRows - 1)));
 
 		if (Colv < gNumberofRows - 1)
 		{
 			//Check right
-			var RowhTop = Rowv;
-			var RowhBottom = Rowv + 1;
-			var ColhRight = Colv;
+			RowhTop = Rowv;
+			RowhBottom = Rowv + 1;
+			ColhRight = Colv;
 
-			var IndexTopHorizontal = RowhTop*(2*(gNumberofRows - 1)) + 2*ColhRight;
-			var IndexBottomHorizontal = RowhBottom*(2*(gNumberofRows - 1)) + 2*ColhRight;
-			var IndexRightVertical = newSelectedLine + (2*(gNumberofRows - 1));
+			IndexTopHorizontal = RowhTop*(2*(gNumberofRows - 1)) + 2*ColhRight;
+			IndexBottomHorizontal = RowhBottom*(2*(gNumberofRows - 1)) + 2*ColhRight;
+			IndexRightVertical = newSelectedLine + (2*(gNumberofRows - 1));
 			if (gLines[IndexTopHorizontal].capturedLine && 
 				gLines[IndexBottomHorizontal].capturedLine && 
 				gLines[IndexRightVertical].capturedLine)
@@ -134,13 +140,13 @@ function checkForCompleteSquares(newSelectedLine)
 		if (Colv > 0)
 		{
 			//Check left
-			var RowhTop = Rowv;
-			var RowhBottom = Rowv + 1;
-			var ColhRight = Colv - 1;
+			RowhTop = Rowv;
+			RowhBottom = Rowv + 1;
+			ColhRight = Colv - 1;
 
-			var IndexTopHorizontal = RowhTop*(2*(gNumberofRows - 1)) + 2*ColhRight;
-			var IndexBottomHorizontal = RowhBottom*(2*(gNumberofRows - 1)) + 2*ColhRight;
-			var IndexRightVertical = newSelectedLine - (2*(gNumberofRows - 1));
+			IndexTopHorizontal = RowhTop*(2*(gNumberofRows - 1)) + 2*ColhRight;
+			IndexBottomHorizontal = RowhBottom*(2*(gNumberofRows - 1)) + 2*ColhRight;
+			IndexRightVertical = newSelectedLine - (2*(gNumberofRows - 1));
 			if (gLines[IndexTopHorizontal].capturedLine && 
 				gLines[IndexBottomHorizontal].capturedLine && 
 				gLines[IndexRightVertical].capturedLine)
@@ -157,7 +163,7 @@ function createSquares(indexOfSelectedLine)
 {
 	var SquaresCenters = checkForCompleteSquares(indexOfSelectedLine);
 	var wonAsquare = false;
-	for (i = 0; i < SquaresCenters.length; i++)
+	for (var i = 0; i < SquaresCenters.length; i++)
 	{
 		var rect = new Kinetic.Rect({
 			x: SquaresCenters[i].x,
@@ -172,10 +178,10 @@ function createSquares(indexOfSelectedLine)
             y: rect.getY() + gWidthBetweenEachDot/2 - 32,
             text: currentPlayer.name.charAt(0),
             fontSize: 60,
-            fontFamily: 'Calibri',
+            fontFamily: "Calibri",
             width:rect.getWidth() ,
-            align: 'center',    
-            fill: 'white'
+            align: "center",    
+            fill: "white"
         });
         gLayer.add(simpleText);
 		gLayer.add(rect);
@@ -187,11 +193,12 @@ function createSquares(indexOfSelectedLine)
 		currentPlayer.score++;
 		wonAsquare = true;
 	}
-	DisplayScore();
+	displayScore();
 	return wonAsquare;
 }
 
 function dot(x, y) {
+	/*jshint validthis: true */
    this.x = x;
    this.y = y;
    this.OutputShape = new Kinetic.Circle({
@@ -200,21 +207,22 @@ function dot(x, y) {
    	radius: 10,
    	fill: "#DDDDDD"
    });
-   this.OutputShape.on('mouseover', function() {
+   this.OutputShape.on("mouseover", function() {
    	this.fill("#AAAAAA");
    	gLayer.draw();
    });
-   this.OutputShape.on('mouseout', function() {
+   this.OutputShape.on("mouseout", function() {
    	this.fill("#DDDDDD");
    	gLayer.draw();
    });
    this.draw = function() {
    	gLayer.add(this.OutputShape);
    	this.OutputShape.moveToTop();
-   }
-};
+   };
+}
 
 function line(x1, y1, x2, y2) {
+	/*jshint validthis: true */
    this.x1 = x1;
    this.y1 = y1;
    this.x2 = x2;
@@ -226,25 +234,25 @@ function line(x1, y1, x2, y2) {
    this.reset = function () {
    	this.color = "#AAAAAA";
    	this.capturedLine = false;
-   }
+   };
    this.OutputShape = new Kinetic.Line({
    	points: [this.x1, this.y1, this.x2, this.y2],
    	stroke: this.color,
    	strokeWidth: 5,
-   	lineCap: 'round',
+   	lineCap: "round",
    });
 
    //Hover effect
-   this.OutputShape.on('mouseover', function() {
+   this.OutputShape.on("mouseover", function() {
    	this.stroke(currentPlayer.color);
    	gLayer.draw();
    });
-   this.OutputShape.on('mouseout', function() {
+   this.OutputShape.on("mouseout", function() {
    	this.stroke(LineVar.color);
    	gLayer.draw();
    });
    //Click event
-   this.OutputShape.on('click', function() {
+   this.OutputShape.on("click", function() {
    	if (!LineVar.capturedLine)
    	{
 	   	LineVar.capturedLine = true;
@@ -259,21 +267,21 @@ function line(x1, y1, x2, y2) {
    this.draw = function() {
    	gLayer.add(this.OutputShape);
    	this.OutputShape.moveToBottom();
-   }
-};
+   };
+}
 
 function newgame() {
 	initGrid();
 	initPlayers();
 	currentPlayer = players[0];
 	populateSettings();
-	DisplayScore();
+	displayScore();
 }
 
 function initPlayers() {
 	while (players.length < gNumberofPlayers)
 	{
-		players.push(new player('Player ' + (players.length).toString(), colors[players.length]));
+		players.push(new player("Player " + (players.length).toString(), colors[players.length]));
 	}
 }
 
@@ -286,20 +294,22 @@ function popPlayers() {
 
 function resetBoard() {
 	//Reset all lines to blank
-	for (i = 0; i < gLines.length; i++)
+	for (var i = 0; i < gLines.length; i++)
 	{
 		gLines[i].reset();
 	}
 	gLayer.draw();
-	DisplayScore();
+	populateSettings();
+	displayScore();
 }
 
 function initKinetic() {
-	gStage = new Kinetic.Stage({container: 'container', width: gBoardWidth, height: gBoardWidth});
+	gStage = new Kinetic.Stage({container: "container", width: gBoardWidth, height: gBoardWidth});
 	gLayer = new Kinetic.Layer();
 }
 
-function initgame(canvasID) {
+/*exported initgame */
+function initgame() {
 	initKinetic();
 	gPlayerScoresDiv = document.getElementById("PlayerInfo");
 	gPlayerNamesDiv = document.getElementById("playerNameSettings");
@@ -314,11 +324,13 @@ function reInitGame() {
 	gStage.add(gLayer);
 	initGrid();
 	currentPlayer = players[0];
-	DisplayScore();
+	displayScore();
 }
 
 function initGrid() {
-	var prevX = prevY = gWidthBetweenEachDot/2;
+	var prevX = gWidthBetweenEachDot/2;
+	var prevY = gWidthBetweenEachDot/2;
+	var h, w;
 	for (h = prevY; h < gBoardWidth; h += gWidthBetweenEachDot)
 	{
 		for (w = gWidthBetweenEachDot + gWidthBetweenEachDot/2; w < gBoardWidth; w += gWidthBetweenEachDot)
@@ -356,6 +368,7 @@ function destroygrid() {
 	gStage.destroy();
 }
 
+/*exported saveSettings */
 function saveSettings(playerNames, gridSize, NewNumberOfPlayers) {
 	if (gridSize != gNumberofRows)
 	{
@@ -369,7 +382,7 @@ function saveSettings(playerNames, gridSize, NewNumberOfPlayers) {
 	//Add or decrease number of players
 	if (NewNumberOfPlayers != gNumberofPlayers)
 	{
-		if (!isNaN(Number(NewNumberOfPlayers)) && Number(NewNumberOfPlayers) < gMaxNumberOfPlayers)
+		if (!isNaN(Number(NewNumberOfPlayers)) && Number(NewNumberOfPlayers) <= gMaxNumberOfPlayers)
 		{
 			if (NewNumberOfPlayers < gNumberofPlayers)
 			{
@@ -381,17 +394,14 @@ function saveSettings(playerNames, gridSize, NewNumberOfPlayers) {
 				gNumberofPlayers = Number(NewNumberOfPlayers);
 				initPlayers();
 			}
-			populateSettings();
-		}
-	}
-	else {
-		for (i = 0; i < gNumberofPlayers; i++)
-		{
-			players[i].name = playerNames[i];
-			players[i].reset();
 		}
 	}
 
+	for (var i = 0; i < Math.min(playerNames.length, gNumberofPlayers) ; i++)
+	{
+		players[i].name = playerNames[i];
+		players[i].reset();
+	}
 
 	resetBoard();
 }
